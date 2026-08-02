@@ -17,13 +17,13 @@ const CONFIG = {
   host: 'Cabosemfio.aternos.me', 
   port: 25565,        // Porta padrão Java do Aternos
   username: 'BotAntiAFK',
-  version: '1.21'     // Travado na versão Java 1.21 para limpar o erro do autoVersion
+  version: '1.21.1'   // Ajustado para a versão Java estável correspondente ao Spigot 26.2
 };
 
 let bot;
 
 function criarBot() {
-  console.log('🤖 Tentando conectar ao servidor Java 1.21...');
+  console.log('🤖 Tentando conectar ao servidor Java 1.21.1...');
   
   bot = mineflayer.createBot({
     ...CONFIG,
