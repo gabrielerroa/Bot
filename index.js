@@ -16,14 +16,14 @@ server.listen(PORTA_WEB, () => {
 const CONFIG = {
   host: 'Cabosemfio.aternos.me', 
   port: 61495,                  
-  username: 'BotAntiAFK',       
-  version: 685                   // Protocolo exato da Mojang para Bedrock 26.2 (1.21.26)
+  username: 'BotAntiAFK'
+  // Linha de versão removida para a biblioteca negociar o protocolo Bedrock automaticamente
 };
 
 let bot;
 
 function criarBot() {
-  console.log('🤖 Tentando conectar ao servidor Bedrock com protocolo 685...');
+  console.log('🤖 Tentando conectar ao servidor Bedrock...');
   
   bot = mineflayer.createBot({
     ...CONFIG,
@@ -45,12 +45,12 @@ function criarBot() {
   });
 }
 
-function ejecutarAcaoAleatoria() {
+function executarAcaoAleatoria() {
   if (!bot || !bot.entity) return;
   const acoes = [andar, pular, olharAoRedor, interagirComOAr];
   const acaoSorteada = acoes[Math.floor(Math.random() * acoes.length)];
   acaoSorteada();
-  setTimeout(ejecutarAcaoAleatoria, Math.random() * 10000 + 5000);
+  setTimeout(executarAcaoAleatoria, Math.random() * 10000 + 5000);
 }
 
 function andar() {
