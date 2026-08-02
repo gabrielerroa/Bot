@@ -1,9 +1,10 @@
 {
-  "name": "bot-aternos",
+  "name": "bot-aternos-bedrock",
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "mineflayer": "^4.20.0"
+    "mineflayer": "^4.20.0",
+    "bedrock-protocol": "^3.5.0"
   },
   "scripts": {
     "start": "node index.js"
