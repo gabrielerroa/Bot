@@ -1,30 +1,30 @@
 const mineflayer = require('mineflayer');
 const http = require('http');
 
-// Mantém um site falso online para a Render não derrubar o plano gratuito
+// Mantém o servidor web falso online para a Render aceitar o plano gratuito
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
   res.end('Bot do Minecraft está rodando perfeitamente em segundo plano!');
 });
 
-// A Render exige que o site use a porta que ela fornece
 const PORTA_WEB = process.env.PORT || 3000;
 server.listen(PORTA_WEB, () => {
   console.log(`🌐 Servidor Web ativo na porta ${PORTA_WEB}`);
 });
 
-// Configurações do seu servidor do Aternos
+// Configurações exatas do seu servidor do Aternos
 const CONFIG = {
   host: 'Cabosemfio.aternos.me', 
   port: 61495,                  
   username: 'BotAntiAFK',       
-  version: '1.21.0'             
+  version: 685                   // Protocolo exato da Mojang para Bedrock 26.2 (1.21.26)
 };
 
 let bot;
 
 function criarBot() {
-  console.log('🤖 Tentando conectar ao servidor Bedrock...');
+  console.log('🤖 Tentando conectar ao servidor Bedrock com protocolo 685...');
+  
   bot = mineflayer.createBot({
     ...CONFIG,
     auth: 'offline'
@@ -45,12 +45,12 @@ function criarBot() {
   });
 }
 
-function executarAcaoAleatoria() {
+function ejecutarAcaoAleatoria() {
   if (!bot || !bot.entity) return;
   const acoes = [andar, pular, olharAoRedor, interagirComOAr];
   const acaoSorteada = acoes[Math.floor(Math.random() * acoes.length)];
   acaoSorteada();
-  setTimeout(executarAcaoAleatoria, Math.random() * 10000 + 5000);
+  setTimeout(ejecutarAcaoAleatoria, Math.random() * 10000 + 5000);
 }
 
 function andar() {
