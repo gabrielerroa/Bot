@@ -4,7 +4,7 @@ const http = require('http');
 // Mantém o servidor web falso online para a Render aceitar o plano gratuito
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
-  res.end('Bot do Minecraft Java está rodando perfeitamente!');
+  res.end('Bot do Minecraft Java Beta está rodando perfeitamente!');
 });
 
 const PORTA_WEB = process.env.PORT || 3000;
@@ -16,22 +16,26 @@ server.listen(PORTA_WEB, () => {
 const CONFIG = {
   host: 'Cabosemfio.aternos.me', 
   port: 25565,        // Porta padrão Spigot Java do Aternos
-  username: 'BotAntiAFK'
-  // Deixamos sem a linha 'version' para o Mineflayer negociar a versão do Beta sozinho
+  username: 'BotAntiAFK',
+  // Força o bot a usar os dados da 1.21.1 para não dar o erro de "No data available"
+  version: '1.21.1'
 };
 
 let bot;
 
 function criarBot() {
-  console.log('🤖 Tentando conectar de forma automática ao servidor...');
+  console.log('🤖 Conectando e injetando suporte a dados estáveis...');
   
   bot = mineflayer.createBot({
     ...CONFIG,
     auth: 'offline'
   });
 
+  // Sobrescreve a checagem automática de versão para aceitar o snapshot 26.2
+  bot.version = '1.21.1';
+
   bot.on('spawn', () => {
-    console.log('✅ Bot entrou com sucesso no mundo Java! Iniciando rotina anti-AFK...');
+    console.log('✅ Bot entrou com sucesso no mundo Java Beta! Iniciando rotina anti-AFK...');
     executarAcaoAleatoria();
   });
 
