@@ -1,64 +1,61 @@
 const mineflayer = require('mineflayer');
+const http = require('http');
 
-// Configurações exatas do seu servidor do Aternos
+// Mantém um site falso online para a Render não derrubar o plano gratuito
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+  res.end('Bot do Minecraft está rodando perfeitamente em segundo plano!');
+});
+
+// A Render exige que o site use a porta que ela fornece
+const PORTA_WEB = process.env.PORT || 3000;
+server.listen(PORTA_WEB, () => {
+  console.log(`🌐 Servidor Web ativo na porta ${PORTA_WEB}`);
+});
+
+// Configurações do seu servidor do Aternos
 const CONFIG = {
   host: 'Cabosemfio.aternos.me', 
   port: 61495,                  
   username: 'BotAntiAFK',       
-  version: '1.21.0'             // Compatibilidade para o protocolo Bedrock v26.2
+  version: '1.21.0'             
 };
 
 let bot;
 
 function criarBot() {
   console.log('🤖 Tentando conectar ao servidor Bedrock...');
-  
-  // Cria o bot em modo offline (Cracked) necessário para o Aternos
   bot = mineflayer.createBot({
     ...CONFIG,
     auth: 'offline'
   });
 
-  // Ação executada assim que o bot entra no mundo
   bot.on('spawn', () => {
     console.log('✅ Bot entrou com sucesso! Iniciando rotina anti-AFK...');
     executarAcaoAleatoria();
   });
 
-  // Sistema de reconexão automática caso o bot seja expulso ou caia
   bot.on('end', (reason) => {
     console.log(`❌ Bot desconectado (${reason}). Tentando reconectar em 30 segundos...`);
     setTimeout(criarBot, 30000);
   });
 
-  // Captura de erros para evitar que o script trave na nuvem
   bot.on('error', (err) => {
     console.log('⚠️ Erro detectado no bot:', err.message);
   });
 }
 
-// Controla o comportamento randômico do bot para enganar o sistema anti-AFK
 function executarAcaoAleatoria() {
   if (!bot || !bot.entity) return;
-
   const acoes = [andar, pular, olharAoRedor, interagirComOAr];
   const acaoSorteada = acoes[Math.floor(Math.random() * acoes.length)];
-  
   acaoSorteada();
-
-  // Espera um tempo aleatório entre 5 e 15 segundos para mudar de ação
-  const proximoTempo = Math.random() * 10000 + 5000;
-  setTimeout(executarAcaoAleatoria, proximoTempo);
+  setTimeout(executarAcaoAleatoria, Math.random() * 10000 + 5000);
 }
-
-// --- Funções de Movimentação Realista ---
 
 function andar() {
   const direcoes = ['forward', 'back', 'left', 'right'];
-  const dir = direcoes[Math.floor(Math.random() * direcoes.length)];
-  bot.setControlState(dir, true);
-  
-  // Anda por 1 a 3 segundos e depois para
+  bot.setControlState(direcoes[Math.floor(Math.random() * direcoes.length)], true);
   setTimeout(() => bot.clearControlStates(), Math.random() * 2000 + 1000);
 }
 
@@ -68,14 +65,11 @@ function pular() {
 }
 
 function olharAoRedor() {
-  const yaw = Math.random() * Math.PI * 2;
-  const pitch = (Math.random() - 0.5) * Math.PI / 2;
-  bot.look(yaw, pitch, true);
+  bot.look(Math.random() * Math.PI * 2, (Math.random() - 0.5) * Math.PI / 2, true);
 }
 
 function interagirComOAr() {
-  bot.swingArm('right'); // Finge que está quebrando blocos
+  bot.swingArm('right');
 }
 
-// Inicia o processo
 criarBot();
