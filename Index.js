@@ -1,57 +1,65 @@
 const mineflayer = require('mineflayer');
 
+// Configurações exatas do seu servidor do Aternos
 const CONFIG = {
-  host: 'SEU_IP_DO_ATERNOS.aternos.me', // Substitua pelo seu IP do Aternos
-  port: 25565,
-  username: 'BotAntiAFK',                // Nome do bot
-  version: '1.20.1'                     // Altere para a versão do seu servidor
+  host: 'Cabosemfio.aternos.me', 
+  port: 61495,                  
+  username: 'BotAntiAFK',       
+  version: '1.21.0'             // Compatibilidade para o protocolo Bedrock v26.2
 };
 
 let bot;
 
 function criarBot() {
-  bot = mineflayer.createBot(CONFIG);
+  console.log('🤖 Tentando conectar ao servidor Bedrock...');
+  
+  // Cria o bot em modo offline (Cracked) necessário para o Aternos
+  bot = mineflayer.createBot({
+    ...CONFIG,
+    auth: 'offline'
+  });
 
+  // Ação executada assim que o bot entra no mundo
   bot.on('spawn', () => {
-    console.log('🤖 Bot entrou no servidor! Iniciando rotina anti-AFK...');
+    console.log('✅ Bot entrou com sucesso! Iniciando rotina anti-AFK...');
     executarAcaoAleatoria();
   });
 
+  // Sistema de reconexão automática caso o bot seja expulso ou caia
   bot.on('end', (reason) => {
     console.log(`❌ Bot desconectado (${reason}). Tentando reconectar em 30 segundos...`);
-    setTimeout(criarBot, 30000); // Tenta reconectar a cada 30 segundos se o servidor cair
+    setTimeout(criarBot, 30000);
   });
 
-  bot.on('error', (err) => console.log('⚠️ Erro no bot:', err));
+  // Captura de erros para evitar que o script trave na nuvem
+  bot.on('error', (err) => {
+    console.log('⚠️ Erro detectado no bot:', err.message);
+  });
 }
 
-// Função principal que escolhe uma atividade aleatória para o bot fazer
+// Controla o comportamento randômico do bot para enganar o sistema anti-AFK
 function executarAcaoAleatoria() {
   if (!bot || !bot.entity) return;
 
-  const acoes = [andar, pular, olharAoRedor, interagirComOAr, falarNoChat];
-  // Sorteia uma das ações da lista acima
+  const acoes = [andar, pular, olharAoRedor, interagirComOAr];
   const acaoSorteada = acoes[Math.floor(Math.random() * acoes.length)];
   
   acaoSorteada();
 
-  // Espera entre 5 a 15 segundos para inventar a próxima moda
+  // Espera um tempo aleatório entre 5 e 15 segundos para mudar de ação
   const proximoTempo = Math.random() * 10000 + 5000;
   setTimeout(executarAcaoAleatoria, proximoTempo);
 }
 
-// ---- LISTA DE AÇÕES DO BOT ----
+// --- Funções de Movimentação Realista ---
 
 function andar() {
   const direcoes = ['forward', 'back', 'left', 'right'];
   const dir = direcoes[Math.floor(Math.random() * direcoes.length)];
-  
   bot.setControlState(dir, true);
   
-  // Anda por 1 a 3 segundos e para
-  setTimeout(() => {
-    bot.clearControlStates();
-  }, Math.random() * 2000 + 1000);
+  // Anda por 1 a 3 segundos e depois para
+  setTimeout(() => bot.clearControlStates(), Math.random() * 2000 + 1000);
 }
 
 function pular() {
@@ -60,27 +68,14 @@ function pular() {
 }
 
 function olharAoRedor() {
-  // Sorteia um ângulo aleatório para olhar (horizontal e vertical)
   const yaw = Math.random() * Math.PI * 2;
   const pitch = (Math.random() - 0.5) * Math.PI / 2;
   bot.look(yaw, pitch, true);
 }
 
 function interagirComOAr() {
-  // Finge que está batendo/quebrando um bloco no ar para gerar atividade física no jogo
-  bot.swingArm('right');
+  bot.swingArm('right'); // Finge que está quebrando blocos
 }
 
-function falarNoChat() {
-  // Envia uma mensagem muito raramente (10% de chance quando essa função é chamada)
-  // Isso evita spam e banimentos por administradores
-  if (Math.random() < 0.1) {
-    const frases = ['Apenas minerando...', 'Opa!', 'Achei um lugar legal', 'Aternos 24/7 ligado!'];
-    const frase = frases[Math.floor(Math.random() * frases.length)];
-    bot.chat(frase);
-  }
-}
-
-// Inicializa o bot pela primeira vez
+// Inicia o processo
 criarBot();
-  
