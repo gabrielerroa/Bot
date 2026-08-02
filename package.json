@@ -4,7 +4,7 @@
   "main": "index.js",
   "dependencies": {
     "mineflayer": "^4.20.0",
-    "bedrock-protocol": "^3.5.0"
+    "bedrock-protocol": "^3.30.0"
   },
   "scripts": {
     "start": "node index.js"
