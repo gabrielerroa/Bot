@@ -1,9 +1,10 @@
 {
-  "name": "bot-aternos-java",
+  "name": "bot-aternos-java-beta",
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "mineflayer": "^4.20.0"
+    "mineflayer": "^4.20.0",
+    "minecraft-data": "github:PrismarineJS/minecraft-data#master"
   },
   "scripts": {
     "start": "node index.js"
