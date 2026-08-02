@@ -12,18 +12,18 @@ server.listen(PORTA_WEB, () => {
   console.log(`🌐 Servidor Web ativo na porta ${PORTA_WEB}`);
 });
 
-// Configurações exatas para o seu Spigot Java no Aternos
+// CONFIGURAÇÃO FORÇADA SEM ERRO DE VERSÃO
 const CONFIG = {
   host: 'Cabosemfio.aternos.me', 
-  port: 25565,        
+  port: 25565,        // Porta padrão para o Spigot Java
   username: 'BotAntiAFK',
-  skipValidation: true // Força o bot a ignorar o erro de versão e entrar assim mesmo!
+  version: '1.21.1'   // Força a versão exata para o Spigot aceitar sem gerar o erro -1
 };
 
 let bot;
 
 function criarBot() {
-  console.log('🤖 Ignorando checagem e conectando ao servidor...');
+  console.log('🤖 Conectando ao Spigot Java na versão 1.21.1...');
   
   bot = mineflayer.createBot({
     ...CONFIG,
